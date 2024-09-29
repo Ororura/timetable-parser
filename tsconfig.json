@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"target": "ES6", // или es6, в зависимости от вашего окружения
+		"module": "ESNext", // Webpack работает с ES модулями
+		"moduleResolution": "node", // Поддержка разрешения модулей
+		"sourceMap": true, // Генерация исходных карт для отладки
+		"outDir": "./dist", // Директория для выходных файлов
+		"strict": true, // Включение строгого режима
+		"jsx": "react", // Если вы используете React
+		"esModuleInterop": true, // Для совместимости с CommonJS
+		"skipLibCheck": true, // Пропустить проверку определений библиотек
+		"forceConsistentCasingInFileNames": true // Поддержка регистронезависимого импорта
+	},
+	"include": ["src/**/*"], // Папка с исходным кодом
+	"exclude": ["node_modules", "**/*.spec.ts"] // Исключение папки node_modules и тестовых файлов
+}
