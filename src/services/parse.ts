@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import { load } from 'cheerio';
 
 type Lessons = {
 	discipline: string;
@@ -9,7 +9,7 @@ type Lessons = {
 };
 
 const parseHtml = (html: string) => {
-	const $ = cheerio.load(html);
+	const $ = load(html);
 	const pairs: { day: string; lessons: Lessons[] }[] = [];
 
 	$('div.card').each((_, element) => {
@@ -45,7 +45,7 @@ const parseHtml = (html: string) => {
 
 const parseGroups = (html: string) => {
 	const map = new Map<string, string>();
-	const $ = cheerio.load(html);
+	const $ = load(html);
 	$('select#raspbasesearch-group_id option').each((_, element) => {
 		const groupName = $(element).text().trim();
 		const groupValue = $(element).attr('value');
