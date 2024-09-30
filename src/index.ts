@@ -1,4 +1,4 @@
-import { read, readGroups } from './api/read.js';
+import { readLessons, readGroups } from './api/read.js';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 
@@ -22,7 +22,7 @@ if (!token) {
 
 const bot = new TelegramBot(token, { polling: true });
 
-let selectedGroup: string | undefined = '';
+let selectedGroup: string | null = null;
 
 bot.onText(/\/start/, async (msg) => {
 	const chatId = msg.chat.id;
@@ -41,12 +41,14 @@ bot.onText(/\/start/, async (msg) => {
 			'https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=&RaspBaseSearch%5Bsemestr%5D=osen&RaspBaseSearch%5Bprepod_id%5D=',
 		);
 
-		selectedGroup = data.get(groupName);
+		const group = data.get(groupName);
 
-		if (!selectedGroup) {
+		if (!group) {
 			await bot.sendMessage(chatId, 'Группа не найдена');
 			return;
 		}
+
+		selectedGroup = group;
 
 		await bot.sendMessage(chatId, `Выбрана группа ${groupName}`);
 
@@ -70,7 +72,7 @@ bot.onText(/\/start/, async (msg) => {
 });
 
 bot.onText(/\/day (.+)/, async (msg, match) => {
-	if (selectedGroup === '') {
+	if (selectedGroup === null) {
 		await bot.sendMessage(msg.chat.id, 'Выбери группу');
 		return;
 	}
@@ -88,7 +90,7 @@ bot.onText(/\/day (.+)/, async (msg, match) => {
 		return;
 	}
 
-	const response = await read(
+	const response = await readLessons(
 		`https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=${selectedGroup}&RaspBaseSearch%5Bsemestr%5D=osen&RaspBaseSearch%5Bprepod_id%5D=`,
 	);
 

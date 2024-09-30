@@ -1,6 +1,6 @@
 import { parseGroups, parseHtml } from '../services/parse.js';
 
-const read = async (url: string) => {
+const readLessons = async (url: string) => {
 	const response = await fetch(url);
 
 	if (!response.ok) {
@@ -33,4 +33,4 @@ const readGroups = async (url: string) => {
 };
 
 
-export { read, readGroups };
+export { readLessons, readGroups };
