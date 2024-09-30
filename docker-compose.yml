@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  parser:
+    image: ororura/rtk-parser:0.0.1
+    container_name: rtk-parser
+    ports:
+      - '3300:3300'
+    environment:
+      - API_KEY=
