@@ -2,9 +2,19 @@ import { read, readGroups } from './api/read.js';
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 
+type Command = {
+	command: string;
+	description: string;
+};
+
 dotenv.config();
 
 const token = process.env.API_KEY;
+
+const commands: Command[] = [
+	{ command: '/start', description: 'Начало работы' },
+	{ command: '/day', description: 'Выбрать день' },
+];
 
 if (!token) {
 	throw new Error('Токен не найден');
@@ -21,12 +31,12 @@ bot.onText(/\/start/, async (msg) => {
 
 	bot.once('message', async (msg) => {
 		const groupName = msg.text;
-		
+
 		if (!groupName) {
 			await bot.sendMessage(chatId, 'Группа не найдена');
 			return;
 		}
-		
+
 		const data = await readGroups(
 			'https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=&RaspBaseSearch%5Bsemestr%5D=osen&RaspBaseSearch%5Bprepod_id%5D=',
 		);
@@ -46,12 +56,12 @@ bot.onText(/\/start/, async (msg) => {
 			{
 				reply_markup: {
 					keyboard: [
-						[{ text: '/день 1' }],
-						[{ text: '/день 2' }],
-						[{ text: '/день 3' }],
-						[{ text: '/день 4' }],
-						[{ text: '/день 5' }],
-						[{ text: '/день 6' }],
+						[{ text: '/day 1' }],
+						[{ text: '/day 2' }],
+						[{ text: '/day 3' }],
+						[{ text: '/day 4' }],
+						[{ text: '/day 5' }],
+						[{ text: '/day 6' }],
 					],
 				},
 			},
@@ -59,7 +69,7 @@ bot.onText(/\/start/, async (msg) => {
 	});
 });
 
-bot.onText(/\/день (.+)/, async (msg, match) => {
+bot.onText(/\/day (.+)/, async (msg, match) => {
 	if (selectedGroup === '') {
 		await bot.sendMessage(msg.chat.id, 'Выбери группу');
 		return;
@@ -97,3 +107,5 @@ bot.onText(/\/день (.+)/, async (msg, match) => {
 		await bot.sendMessage(chatId, 'Нет данных для выбранного дня');
 	}
 });
+
+bot.setMyCommands(commands);
